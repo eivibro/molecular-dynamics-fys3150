@@ -11,6 +11,7 @@ class System
 {
 private:
     vec3 m_systemSize;
+    //double m_ri2;
     vector<Atom*> m_atoms;
     Potential* m_potential = nullptr;
     Integrator* m_integrator = nullptr;
@@ -40,5 +41,6 @@ public:
     int steps() { return m_steps; }
     void setSteps(int steps) { m_steps = steps; }
     double volume() { return m_systemSize[0]*m_systemSize[1]*m_systemSize[2]; }
+    //double ri2(){return m_ri2;}
 };
 #endif

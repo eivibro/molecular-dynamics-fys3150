@@ -9,6 +9,7 @@
 #include "unitconverter.h"
 #include <iostream>
 
+
 using namespace std;
 
 int main(int numberOfArguments, char **argumentList)
@@ -22,9 +23,8 @@ int main(int numberOfArguments, char **argumentList)
     // If a second argument is provided, it is the initial temperature (measured in kelvin)
     if(numberOfArguments > 2) initialTemperature = UnitConverter::temperatureFromSI(atof(argumentList[2]));
     // If a third argument is provided, it is the lattice constant determining the density (measured in angstroms)
-    if(numberOfArguments > 3) initialTemperature = UnitConverter::lengthFromAngstroms(atof(argumentList[3]));
-
-    double dt = UnitConverter::timeFromSI(1e-15); // Measured in seconds
+    if(numberOfArguments > 3) latticeConstant = UnitConverter::lengthFromAngstroms(atof(argumentList[3]));
+    double dt = UnitConverter::timeFromSI(1e-14); // Measured in seconds
 
     cout << "One unit of length is " << UnitConverter::lengthToSI(1.0) << " meters" << endl;
     cout << "One unit of velocity is " << UnitConverter::velocityToSI(1.0) << " meters/second" << endl;
@@ -34,26 +34,33 @@ int main(int numberOfArguments, char **argumentList)
 
     System system;
     system.createFCCLattice(numberOfUnitCells, latticeConstant, initialTemperature);
-    system.setPotential(new LennardJones(1.0, 1.0)); // You must insert correct parameters here
-    system.setIntegrator(new EulerCromer());
+    system.setPotential(new LennardJones(UnitConverter::lengthFromAngstroms(3.405),
+                                         UnitConverter::temperatureFromSI(119.8)));
+    // You must insert correct parameters in the function above
+    system.setIntegrator(new VelocityVerlet());
     system.removeTotalMomentum();
 
     StatisticsSampler statisticsSampler;
     IO movie; // To write the state to file
     movie.open("movie.xyz");
+    statisticsSampler.open("statisticsResults.txt");
 
+    system.calculateForces();
     cout << "Timestep Time Temperature KineticEnergy PotentialEnergy TotalEnergy" << endl;
-    for(int timestep=0; timestep<1000; timestep++) {
+    for(int timestep=1; timestep<20000; timestep++) {
         system.step(dt);
         statisticsSampler.sample(system);
         if( !(timestep % 100) ) {
             // Print the timestep every 100 timesteps
-            cout << system.steps() << "      " << system.time() << "      " << statisticsSampler.temperature() << "      " << statisticsSampler.kineticEnergy() << "      " << statisticsSampler.potentialEnergy() << "      " << statisticsSampler.totalEnergy() << endl;
+            cout << system.steps() << "      " << system.time() << "      "
+                 << statisticsSampler.temperature() << "      " << statisticsSampler.kineticEnergy()
+                 << "      " << statisticsSampler.potentialEnergy() << "      "
+                 << statisticsSampler.totalEnergy() << endl;
         }
         movie.saveState(&system);
     }
-
     movie.close();
+    statisticsSampler.close();
 
     return 0;
 }

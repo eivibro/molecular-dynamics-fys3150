@@ -19,4 +19,5 @@ void Atom::resetVelocityMaxwellian(double temperature)
     double boltzmannConstant = 1.0; // In these units, the boltzmann constant equals 1
     double standardDeviation = sqrt(boltzmannConstant*temperature/m_mass);
     velocity.randomGaussian(0, standardDeviation);
+    initialPosition = velocity;
 }
