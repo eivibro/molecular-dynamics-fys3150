@@ -27,8 +27,8 @@ System::~System()
 }
 
 void System::applyPeriodicBoundaryConditions() {
-    // Read here: http://en.wikipedia.org/wiki/Periodic_boundary_conditions#Practical_implementation:_continuity_and_the_minimum_image_convention
-    //m_ri2 = 0;
+    // Read here: http://en.wikipedia.org/wiki/Periodic_boundary_
+    //conditions#Practical_implementation:_continuity_and_the_minimum_image_convention
     for(Atom *atom : m_atoms){
         if(m_systemSize[0]<atom->position[0]){
             atom->position[0]-=m_systemSize[0];
@@ -54,19 +54,12 @@ void System::applyPeriodicBoundaryConditions() {
             atom->position[2]+=m_systemSize[2];
             atom->initialPosition[2] += m_systemSize[2];
         }
-        //m_ri2 += (atom->position-atom->initialPosition).lengthSquared();
-
-//        if(m_systemSize[0]<atom->position[0]){atom->position[0]-=m_systemSize[0];}
-//        if(m_systemSize[1]<atom->position[1]){atom->position[1]-=m_systemSize[1];}
-//        if(m_systemSize[2]<atom->position[2]){atom->position[2]-=m_systemSize[2];}
-//        if(0>atom->position[0]){atom->position[0]+=m_systemSize[0];}
-//        if(0>atom->position[1]){atom->position[1]+=m_systemSize[1];}
-//        if(0>atom->position[2]){atom->position[2]+=m_systemSize[2];}
     }
 }
 
 void System::removeTotalMomentum() {
-    // Find the total momentum and remove momentum equally on each atom so the total momentum becomes zero.
+    // Find the total momentum and remove momentum equally on each atom so
+    //the total momentum becomes zero.
     vector<double> momentum(3,0.0);
     for(Atom *atom : m_atoms){
         momentum[0] += atom->mass()*atom->velocity[0];
@@ -87,44 +80,18 @@ void System::resetForcesOnAllAtoms() {
     }
 }
 
-void System::createFCCLattice(int numberOfUnitCellsEachDimension, double latticeConstant, double temperature) {
+void System::createFCCLattice(int numberOfUnitCellsEachDimension, double latticeConstant,
+                              double temperature) {
     std::cout << "Temp: " << temperature << std::endl;
     for(int i=0; i<numberOfUnitCellsEachDimension; i++){
         for(int j=0; j<numberOfUnitCellsEachDimension; j++){
             for(int k=0; k<numberOfUnitCellsEachDimension; k++){
-//                Atom *atom = new Atom(UnitConverter::massFromSI(6.63352088e-26));
-//                double x = latticeConstant/2+i*latticeConstant;
-//                double y = latticeConstant/2+j*latticeConstant;
-//                double z = latticeConstant/2+k*latticeConstant;
-//                atom->position.set(x,y,z);
-//                atom->resetVelocityMaxwellian(temperature);
-//                m_atoms.push_back(atom);
-//                Atom *atom1 = new Atom(UnitConverter::massFromSI(6.63352088e-26));
-//                x = latticeConstant/2+i*latticeConstant+latticeConstant/2;
-//                y = latticeConstant/2+j*latticeConstant+latticeConstant/2;
-//                z = latticeConstant/2+k*latticeConstant;
-//                atom1->position.set(x,y,z);
-//                atom1->resetVelocityMaxwellian(temperature);
-//                m_atoms.push_back(atom1);
-//                Atom *atom2 = new Atom(UnitConverter::massFromSI(6.63352088e-26));
-//                x = latticeConstant/2+i*latticeConstant;
-//                y = latticeConstant/2+j*latticeConstant+latticeConstant/2;
-//                z = latticeConstant/2+k*latticeConstant+latticeConstant/2;
-//                atom2->position.set(x,y,z);
-//                atom2->resetVelocityMaxwellian(temperature);
-//                m_atoms.push_back(atom2);
-//                Atom *atom3 = new Atom(UnitConverter::massFromSI(6.63352088e-26));
-//                x = latticeConstant/2+i*latticeConstant+latticeConstant/2;
-//                y = latticeConstant/2+j*latticeConstant;
-//                z = latticeConstant/2+k*latticeConstant+latticeConstant/2;
-//                atom3->position.set(x,y,z);
-//                atom3->resetVelocityMaxwellian(temperature);
-//                m_atoms.push_back(atom3);
                 Atom *atom = new Atom(UnitConverter::massFromSI(6.63352088e-26));
                 double x = i*latticeConstant;
                 double y = j*latticeConstant;
                 double z = k*latticeConstant;
                 atom->position.set(x,y,z);
+                atom->initialPosition.set(x,y,z);
                 atom->resetVelocityMaxwellian(temperature);
                 m_atoms.push_back(atom);
                 Atom *atom1 = new Atom(UnitConverter::massFromSI(6.63352088e-26));
@@ -132,6 +99,7 @@ void System::createFCCLattice(int numberOfUnitCellsEachDimension, double lattice
                 y = j*latticeConstant+latticeConstant/2;
                 z = k*latticeConstant;
                 atom1->position.set(x,y,z);
+                atom1->initialPosition.set(x,y,z);
                 atom1->resetVelocityMaxwellian(temperature);
                 m_atoms.push_back(atom1);
                 Atom *atom2 = new Atom(UnitConverter::massFromSI(6.63352088e-26));
@@ -139,6 +107,7 @@ void System::createFCCLattice(int numberOfUnitCellsEachDimension, double lattice
                 y = j*latticeConstant+latticeConstant/2;
                 z = k*latticeConstant+latticeConstant/2;
                 atom2->position.set(x,y,z);
+                atom2->initialPosition.set(x,y,z);
                 atom2->resetVelocityMaxwellian(temperature);
                 m_atoms.push_back(atom2);
                 Atom *atom3 = new Atom(UnitConverter::massFromSI(6.63352088e-26));
@@ -146,6 +115,7 @@ void System::createFCCLattice(int numberOfUnitCellsEachDimension, double lattice
                 y = j*latticeConstant;
                 z = k*latticeConstant+latticeConstant/2;
                 atom3->position.set(x,y,z);
+                atom3->initialPosition.set(x,y,z);
                 atom3->resetVelocityMaxwellian(temperature);
                 m_atoms.push_back(atom3);
             }

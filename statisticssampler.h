@@ -9,7 +9,7 @@ private:
     double m_potentialEnergy = 0;
     double m_temperature = 0;
     double m_density = 0;
-    double const m_temperatureCoefficient = 3.0/2.0/500.0/(1.381e-23);
+    double const m_temperatureCoefficient = 2.0/3.0/500.0/(1.381e-23);
     double m_diffusionConstant = 0;
     double m_ri2;
     std::ofstream file;

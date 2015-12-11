@@ -16,7 +16,8 @@ IO::~IO() {
 
 void IO::open(const char *filename) {
     if(file.is_open()) {
-        std::cout << "<IO.cpp> Error, tried to open file " << filename << ", but some file is already open." << endl;
+        std::cout << "<IO.cpp> Error, tried to open file " << filename
+                  << ", but some file is already open." << endl;
         exit(1);
     }
 
@@ -29,7 +30,8 @@ void IO::close() {
     }
 }
 
-// This saves the current state to a file following the xyz-standard (see http://en.wikipedia.org/wiki/XYZ_file_format )
+// This saves the current state to a file following the xyz-standard
+//(see http://en.wikipedia.org/wiki/XYZ_file_format )
 void IO::saveState(System *system)
 {
     if(file.is_open()) {

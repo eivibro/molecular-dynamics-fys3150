@@ -27,7 +27,7 @@ void StatisticsSampler::close() {
 void StatisticsSampler::saveToFile(System &system)
 {
     if(file.is_open()) {
-        file << system.time() << "    " << m_kineticEnergy
+        file << UnitConverter::timeToSI(system.time()) << "    " << m_kineticEnergy
                   << "    " << m_potentialEnergy << "    "
                   << m_temperature<< "    "<< m_diffusionConstant << std::endl;
     }
@@ -59,6 +59,7 @@ void StatisticsSampler::samplePotentialEnergy(System &system)
 
 void StatisticsSampler::sampleTemperature(System &system)
 {
+    //Only for 500 atoms because of the tmeperature coefficient
     m_temperature = m_temperatureCoefficient*UnitConverter::energyToSI(m_kineticEnergy);
 }
 
@@ -69,11 +70,13 @@ void StatisticsSampler::sampleDensity(System &system)
 
 void StatisticsSampler::sampleDiffusion(System &system)
 {
-    m_ri2;
+    //m_ri2;
+    double expectationRi2;
     m_diffusionConstant = 0;
     for(Atom *atom:system.atoms()){
         m_ri2 += (atom->position-atom->initialPosition).lengthSquared();
-        m_diffusionConstant = m_ri2/(6*system.atoms().size()*system.time());
     }
+    expectationRi2 = UnitConverter::lengthToSI(m_ri2/system.steps());
+    m_diffusionConstant = expectationRi2/(6*system.atoms().size()*UnitConverter::timeToSI(system.time()));
 }
 

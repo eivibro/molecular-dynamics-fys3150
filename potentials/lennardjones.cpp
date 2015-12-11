@@ -22,7 +22,8 @@ void LennardJones::calculateForces(System *system)
     double epsilonTimes24 = 24*m_epsilon;
 
     double rCut = 2.5*m_sigma;
-    double potentialEnergyAtRCut = epsilonTimes4*(sigmaPower12/pow(rCut,12) - sigmaPower6/pow(rCut,6));
+    double potentialEnergyAtRCut = epsilonTimes4*(sigmaPower12/pow(rCut,12)
+                                                  - sigmaPower6/pow(rCut,6));
 
     for(int i = 0; i < atoms.size(); i++){
         for(int j = i+1; j < atoms.size(); j++){
@@ -47,7 +48,8 @@ void LennardJones::calculateForces(System *system)
             double oneOverRij12 = oneOverRij6*oneOverRij6;
 
             //Calculating forces
-            double F = epsilonTimes24*(sigmaPower12Times2*oneOverRij12-sigmaPower6*oneOverRij6)*oneOverRij2;
+            double F = epsilonTimes24*(sigmaPower12Times2*oneOverRij12
+                                       -sigmaPower6*oneOverRij6)*oneOverRij2;
             atoms[i]->force[0] += F*xij;
             atoms[i]->force[1] += F*yij;
             atoms[i]->force[2] += F*zij;
@@ -56,7 +58,8 @@ void LennardJones::calculateForces(System *system)
             atoms[j]->force[2] -= F*zij;
 
             //Calculating the potential energy
-            m_potentialEnergy += epsilonTimes4*(sigmaPower12*oneOverRij12 - sigmaPower6*oneOverRij6) - potentialEnergyAtRCut;
+            m_potentialEnergy += epsilonTimes4*
+                    (sigmaPower12*oneOverRij12 - sigmaPower6*oneOverRij6) - potentialEnergyAtRCut;
         }
     }
 }

@@ -38,16 +38,17 @@ int main(int numberOfArguments, char **argumentList)
                                          UnitConverter::temperatureFromSI(119.8)));
     // You must insert correct parameters in the function above
     system.setIntegrator(new VelocityVerlet());
+    //system.setIntegrator(new EulerCromer());
     system.removeTotalMomentum();
 
     StatisticsSampler statisticsSampler;
     IO movie; // To write the state to file
     movie.open("movie.xyz");
-    statisticsSampler.open("statisticsResults.txt");
+    statisticsSampler.open("ecdt10.txt");
 
     system.calculateForces();
     cout << "Timestep Time Temperature KineticEnergy PotentialEnergy TotalEnergy" << endl;
-    for(int timestep=1; timestep<20000; timestep++) {
+    for(int timestep=1; timestep<10002; timestep++) {
         system.step(dt);
         statisticsSampler.sample(system);
         if( !(timestep % 100) ) {
